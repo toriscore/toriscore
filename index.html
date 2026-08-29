@@ -1,10 +1,91 @@
 <!doctype html>
-<meta charset="utf-8">
-<title>TORI</title>
-<h1>TORI</h1>
-<p>Career-claim scoring. Do not invent evidence.</p>
-<ul>
-<li><a href="https://github.com/toriscore">GitHub</a></li>
-<li><a href="https://x.com/gettoriscore">X</a></li>
-<li><a href="https://www.youtube.com/@gettoriscore">YouTube</a></li>
-</ul>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TORI — score a career claim</title>
+  <style>
+    :root { color-scheme: dark; --ink:#e8e4d9; --mute:#9a9588; --line:#3a3832; --bg:#141310; --card:#1c1a16; --hold:#7d9a6a; --weaken:#c4a35a; --drop:#c46a5a; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font: 16px/1.45 system-ui, sans-serif; background: var(--bg); color: var(--ink); }
+    main { max-width: 40rem; margin: 0 auto; padding: 2.5rem 1.25rem 4rem; }
+    h1 { font-size: 1.4rem; font-weight: 650; letter-spacing: .02em; margin: 0 0 .35rem; }
+    .lede { color: var(--mute); margin: 0 0 1.75rem; }
+    label { display: block; font-size: .8rem; text-transform: uppercase; letter-spacing: .08em; color: var(--mute); margin: 1.1rem 0 .35rem; }
+    input, textarea { width: 100%; background: var(--card); color: var(--ink); border: 1px solid var(--line); border-radius: 8px; padding: .7rem .8rem; font: inherit; }
+    textarea { min-height: 5.5rem; resize: vertical; }
+    .scores { display: flex; gap: .5rem; margin-top: .5rem; }
+    button { flex: 1; font: inherit; font-weight: 600; border: 1px solid var(--line); background: var(--card); color: var(--ink); padding: .7rem; border-radius: 8px; cursor: pointer; }
+    button[data-score="hold"] { border-color: var(--hold); }
+    button[data-score="weaken"] { border-color: var(--weaken); }
+    button[data-score="drop"] { border-color: var(--drop); }
+    button:hover, button[aria-pressed="true"] { filter: brightness(1.15); }
+    #card { display: none; margin-top: 1.75rem; padding: 1rem 1.1rem; background: var(--card); border: 1px solid var(--line); border-radius: 8px; white-space: pre-wrap; }
+    #copy { margin-top: .75rem; width: 100%; }
+    footer { margin-top: 2.5rem; color: var(--mute); font-size: .85rem; }
+    a { color: var(--ink); }
+  </style>
+</head>
+<body>
+<main>
+  <h1>TORI</h1>
+  <p class="lede">Score a career claim. Do not invent evidence.</p>
+
+  <label for="claim">1. Claim — what was actually said</label>
+  <textarea id="claim" placeholder="Paste the claim, verbatim."></textarea>
+
+  <label for="source">2. Source — where it came from</label>
+  <input id="source" type="text" placeholder="Resume, LinkedIn, offer letter, interview, news…">
+
+  <label for="check">3. Check — what would falsify it</label>
+  <textarea id="check" placeholder="A document, date, title, or number that would make this false."></textarea>
+
+  <label>4. Score</label>
+  <div class="scores">
+    <button type="button" data-score="hold">Hold</button>
+    <button type="button" data-score="weaken">Weaken</button>
+    <button type="button" data-score="drop">Drop</button>
+  </div>
+
+  <pre id="card"></pre>
+  <button type="button" id="copy">Copy the card</button>
+
+  <footer>No account. Nothing is stored. Do not invent evidence.</footer>
+</main>
+<script>
+  const $ = (id) => document.getElementById(id);
+  let score = "";
+  function render() {
+    const claim = $("claim").value.trim();
+    const source = $("source").value.trim();
+    const check = $("check").value.trim();
+    if (!claim && !source && !check && !score) { $("card").style.display = "none"; return; }
+    const card = [
+      "TORI",
+      "Claim: " + (claim || "—"),
+      "Source: " + (source || "—"),
+      "Check: " + (check || "—"),
+      "Score: " + (score || "unscored")
+    ].join("\n");
+    $("card").textContent = card;
+    $("card").style.display = "block";
+  }
+  document.querySelectorAll("button[data-score]").forEach((b) => {
+    b.addEventListener("click", () => {
+      score = b.dataset.score;
+      document.querySelectorAll("button[data-score]").forEach((x) => x.setAttribute("aria-pressed", x === b ? "true" : "false"));
+      render();
+    });
+  });
+  ["claim","source","check"].forEach((id) => $(id).addEventListener("input", render));
+  $("copy").addEventListener("click", async () => {
+    render();
+    const t = $("card").textContent;
+    if (!t) return;
+    try { await navigator.clipboard.writeText(t); $("copy").textContent = "Copied"; }
+    catch { $("copy").textContent = "Select the card and copy"; }
+    setTimeout(() => { $("copy").textContent = "Copy the card"; }, 1500);
+  });
+</script>
+</body>
+</html>
