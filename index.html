@@ -23,6 +23,9 @@
     #card { display: none; margin-top: 1.75rem; padding: 1rem 1.1rem; background: var(--card); border: 1px solid var(--line); border-radius: 8px; white-space: pre-wrap; }
     #copy { margin-top: .75rem; width: 100%; }
     footer { margin-top: 2.5rem; color: var(--mute); font-size: .85rem; }
+    aside { margin-top: 2rem; padding: 1rem 1.1rem; border: 1px dashed var(--line); border-radius: 8px; color: var(--mute); }
+    aside strong { color: var(--ink); }
+    aside pre { margin: .6rem 0 0; color: var(--ink); white-space: pre-wrap; }
     a { color: var(--ink); }
   </style>
 </head>
@@ -51,6 +54,14 @@
   <button type="button" id="copy">Copy the card</button>
 
   <footer>No account. Nothing is stored. Do not invent evidence.</footer>
+  <aside>
+    <strong>Worked example</strong> — copy the motion, not the names.
+    <pre>TORI
+Claim: On August 24, 2011, Apple’s board named Tim Cook, then COO, as CEO.
+Source: Apple Newsroom 2011-08-24; Apple 8-K filed that day; Reuters same day.
+Check: An 8-K or Apple filing that names someone else as CEO that day, or Cook’s start dated later.
+Score: hold</pre>
+  </aside>
 </main>
 <script>
   const $ = (id) => document.getElementById(id);
